@@ -1,5 +1,5 @@
-#include "tad_partida.h"
-#include "tad_time.h"
+#include "../time/time.h"
+#include "../partida/partida.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,12 +10,13 @@ struct partida {
     int Time2id;     // ID do segundo time
     int GolsTime1;   // Gols marcados pelo primeiro time
     int GolsTime2;   // Gols marcados pelo segundo time
+    Partida *next;
+    Partida *prev;
 };
 
-#define MAX_PARTIDAS 90 // 10 times, turno único: (10 * 9) / 2 = 45 jogos (Mas por um erro de criação do arquivo, ele possui 90 partidas)
-
 struct bdpartida {
-    Partida *p[MAX_PARTIDAS];
+    Partida *first;
+    Partida *last;
     int qtd;
 };
 
@@ -43,14 +44,15 @@ void extraiArquivoPartidas(bdPartidas *bdp) {
 
 // Insere a partida no bdPartidas
 void inserirBDPartidas(Partida *novaPartida, bdPartidas *bdp) {
-    if (bdp->qtd >= MAX_PARTIDAS) {
-        printf("Erro ao inserir mais partidas");
-        return;
+    novaPartida->next = bdp->first;
+    novaPartida->prev = NULL;
+    if (bdp->qtd != 0) {
+        bdp->first->prev = novaPartida;
     } else {
-        bdp->p[bdp->qtd] = novaPartida;
-        bdp->qtd++;
+        bdp->last = novaPartida;
     }
-
+    bdp->first = novaPartida;
+    bdp->qtd++;
 }
 
 // Cria e aloca memória pra bdPartidas
@@ -60,33 +62,37 @@ bdPartidas *createBDPartidas() {
         printf("Erro ao alocar memória");
     }
     bd->qtd = 0;
-       for (int i = 0; i<MAX_PARTIDAS; i++) {
-        bd->p[i] = NULL;   
-    }
+    bd->first = NULL;
+    bd->last = NULL;
     return bd;
 }
 
 // Imprime as informações bdPartidas
 void printBDPartidas(bdPartidas *bd) {
-    for (int i = 0; i < bd->qtd; i++) {
-        printf("Partida %d:\n", i + 1);
-        printf("  ID: %d\n", bd->p[i]->id);
-        printf("  ID do time 1: %d\n", bd->p[i]->Time1id);
-        printf("  ID do time 2: %d\n", bd->p[i]->Time2id);
-        printf("  Gols do time 1: %d\n", bd->p[i]->GolsTime1);
-        printf("  Gols do time 2: %d\n", bd->p[i]->GolsTime2);
+    int cont = 0;
+    for (Partida *p = bd->first; p != NULL; p = p->next) {
+        printf("Partida %d:\n", cont + 1);
+        printf("  ID: %d\n", p->id);
+        printf("  ID do time 1: %d\n", p->Time1id);
+        printf("  ID do time 2: %d\n", p->Time2id);
+        printf("  Gols do time 1: %d\n", p->GolsTime1);
+        printf("  Gols do time 2: %d\n", p->GolsTime2);
+        cont++;
     }
 
 }
 
-// Libera memória ocupada por bdPartidas
-void liberaBDPartidas(bdPartidas *bd) {
-    for(int i=0; i<bd->qtd; i++) {
-        free(bd->p[i]);
+// Libera memória de BDTimes
+void liberaBDTimes(bdPartidas *bd) {
+    Partida *p = bd->first;
+    Partida *t;
+    while (p != NULL) {
+        t = p->next;
+        free(p);
+        p = t;
     }
     free(bd);
 }
-
 // Retorna a quantidade de partidas de bdPartidas
 int getQtdPartidas(bdPartidas *bdp) {
     return bdp->qtd;
@@ -94,25 +100,70 @@ int getQtdPartidas(bdPartidas *bdp) {
 
 // Retorna o ID do time Mandante
 int getTime1ID(bdPartidas *bdp, int i) {
-    return bdp->p[i]->Time1id;
+    Partida *p = bdp->first;
+    int cont = 0;
+    while(p != NULL && cont < i) {
+        p = p->next;
+        cont++;
+    }
+    if(p == NULL) {
+        return NULL;
+    }
+    return p->Time1id;
 }
 
 // Retorna o ID do time Visitante
 int getTime2ID(bdPartidas *bdp, int i) {
-    return bdp->p[i]->Time2id;
+    Partida *p = bdp->first;
+    int cont = 0;
+    while(p != NULL && cont < i) {
+        p = p->next;
+        cont++;
+    }
+    if(p == NULL) {
+        return NULL;
+    }
+    return p->Time2id;
 }
 
 // Retorna os Gols do time Mandante
 int getGolsTime1(bdPartidas *bdp, int i) {
-    return bdp->p[i]->GolsTime1;
+    Partida *p = bdp->first;
+    int cont = 0;
+    while(p != NULL && cont < i) {
+        p = p->next;
+        cont++;
+    }
+    if(p == NULL) {
+        return NULL;
+    }
+    return p->GolsTime1;
 }
 
 // Retorna os Gols do time Visitante
 int getGolsTime2(bdPartidas *bdp, int i) {
-    return bdp->p[i]->GolsTime2;
+    Partida *p = bdp->first;
+    int cont = 0;
+    while(p != NULL && cont < i) {
+        p = p->next;
+        cont++;
+    }
+    if(p == NULL) {
+        return NULL;
+    }
+    return p->GolsTime2;
 }
 
 // Retorna o ID da Partida de acordo com o índice
 int getPartidaID(bdPartidas *bdp, int i) {
-    return bdp->p[i]->id;
+    Partida *p = bdp->first;
+    int cont = 0;
+    while(p != NULL && cont < i) {
+        p = p->next;
+        cont++;
+    }
+    if(p == NULL) {
+        return NULL;
+    }
+    return p->id;
 }

@@ -1,6 +1,6 @@
 #ifndef TAD_TIME_H
 #define TAD_TIME_H
-#include "tad_partida.h"
+#include "../partida/partida.h"
 
 //Definição do dado Time para representar uma informação de time
 typedef struct time Time;

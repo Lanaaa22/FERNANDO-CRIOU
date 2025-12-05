@@ -1,8 +1,8 @@
 #ifndef CONSULTAR_PARTIDA_H
 #define CONSULTAR_PARTIDA_H
 
-#include "../TADs/tad_time.h"
-#include "../TADs/tad_partida.h"
+#include "../time/time.h"
+#include "../partida/partida.h"
 
 // Menu de consultar partida
 void ConsultarPartida(bdTimes *bdt, bdPartidas *bdp);

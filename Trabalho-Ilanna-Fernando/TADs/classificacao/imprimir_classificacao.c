@@ -1,6 +1,7 @@
+#include "../system/system.h"
+#include "../time/consultar_time.h"
+#include "../partida/consultar_partida.h"
 #include "imprimir_classificacao.h"
-#include "auxiliares.h"
-#include "consultar_time.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

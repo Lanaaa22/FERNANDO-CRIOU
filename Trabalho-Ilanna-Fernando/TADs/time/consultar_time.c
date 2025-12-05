@@ -1,5 +1,5 @@
 #include "consultar_time.h"
-#include "system.h"
+#include "../system/system.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

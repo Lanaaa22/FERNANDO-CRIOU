@@ -1,5 +1,5 @@
-#include "consultar_partida.h"
-#include "system.h"
+#include "../system/system.h"
+#include "../partida/consultar_partida.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

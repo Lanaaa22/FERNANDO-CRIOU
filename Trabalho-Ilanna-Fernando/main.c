@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "funcoes/system.h"
+#include "TADs/system/system.h"
 #include <locale.h>
 
 int main() {

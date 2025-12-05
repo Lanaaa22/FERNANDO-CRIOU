@@ -1,4 +1,4 @@
-#include "tad_time.h"
+#include "time.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,14 +6,14 @@
 struct time {
     int id; //id dos times
     char nome[50]; //nome do time
+    Time *next;
 };
-
-#define MAX_TIMES 45 // 10 times, turno único: (10 * 9) / 2 = 45 jogos
 
 struct bdtimes {
-    Time *t[MAX_TIMES];
+    Time *first;
     int qtd;
 };
+
 
 // Função que carrega arquivo time.csv
 void extraiArquivoTimes(bdTimes *bdt) {
@@ -39,55 +39,73 @@ void extraiArquivoTimes(bdTimes *bdt) {
 
 // Função que insere um novo time (do arquivo times.csv) na struct bdtime
 void inserirBDtimes(Time *novoTime, bdTimes *bdt) {
-    bdt->t[bdt->qtd] = novoTime;
-    bdt->qtd++;
+    novoTime->next = bdt->first;
+    bdt->first = novoTime;
 }
 
 // Cria e aloca memória para o estrutura BDTime
-bdTimes *createBDTimes() 
-{
+bdTimes *createBDTimes() {
    bdTimes *bd = (bdTimes *)malloc(sizeof(bdTimes)); 
     if (bd == NULL) {
         printf("Erro ao alocar memória");
     }
    bd->qtd = 0;                                         
-   for (int i = 0; i<MAX_TIMES; i++) {
-        bd->t[i] = NULL;   
-   }                                  
-   
-
+   bd->first = NULL;                    
    return bd; 
 }
 
 // Imprime bdTimes
 void printBDTimes(bdTimes *bd) {
-    for (int i = 0; i < bd->qtd; i++) {
-        printf("Time %d:\n", i + 1);
-        printf("  ID: %d\n", bd->t[i]->id);
-        printf("  Nome: %s\n", bd->t[i]->nome);
+    int cont = 0;
+    for (Time *p = bd->first; p != NULL; p = p->next) {
+        printf("Time %d:\n", cont + 1);
+        printf("  ID: %d\n", p->id);
+        printf("  Nome: %s\n", p->nome);
+        cont++;
     }
 }
 
 // Libera memória de BDTimes
 void liberaBDTimes(bdTimes *bd) {
-    for(int i=0; i<bd->qtd; i++) {
-        free(bd->t[i]);
+    Time *p = bd->first;
+    Time *t;
+    while (p != NULL) {
+        t = p->next;
+        free(p);
+        p = t;
     }
     free(bd);
 }
 
 // Retorna a quantidade de times
-int getQtdTimes(bdTimes *bdt) {
+int getQtdTimes(bdTimes *bdt, int i) {
     return bdt->qtd;
 }
 
 // Retorna o ID do time de acordo com o índice
 int getIDTime(bdTimes *bdt, int i) { 
-    return bdt->t[i]->id;
+    Time *p = bdt->first;
+    int cont = 0;
+    while(p != NULL && cont < i) {
+        p = p->next;
+        cont++;
+    }
+    if(p == NULL) {
+        return NULL;
+    }
+    return p->id;
 }
 
 // Retorna o nome do time de acordo com o índice
-char* getNomeTime(bdTimes *bdt, int i) { 
-    return bdt->t[i]->nome;
+int getIDNome(bdTimes *bdt, int i) { 
+    Time *p = bdt->first;
+    int cont = 0;
+    while(p != NULL && cont < i) {
+        p = p->next;
+        cont++;
+    }
+    if(p == NULL) {
+        return NULL;
+    }
+    return p->nome;
 }
-
