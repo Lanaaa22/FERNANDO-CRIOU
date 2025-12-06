@@ -2,12 +2,13 @@
 #include "../time/consultar_time.h"
 #include "../partida/consultar_partida.h"
 #include "../classificacao/imprimir_classificacao.h"
+#include "../partida/inserir_partida.h"
+#include "../partida/remover_partida.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <locale.h>
-
 // Menu do programa (Interface)
 void lobby(bdTimes *bdt, bdPartidas *bdp) {  
     setlocale(LC_ALL, "");
@@ -22,7 +23,7 @@ void lobby(bdTimes *bdt, bdPartidas *bdp) {
     printf("7: Sair do programa\n");
     printf("---------------------\n\n");
     char option[5];
-    scanf("%s", &option); // lê a opção digitada pelo usuário
+    scanf("%s", option); // lê a opção digitada pelo usuário
     if (strcmp(option, "1") == 0) {
         LimpaTela();
         ConsultarTime(bdt, bdp);
@@ -39,7 +40,14 @@ void lobby(bdTimes *bdt, bdPartidas *bdp) {
     } 
     else if (strcmp(option, "3") == 0) {
         LimpaTela();
-        AtualizarPartida(bdt, bdp);
+        //AtualizarPartida(bdt, bdp);
+        sleep(1.5);
+        printf("---------------------\n\n");
+        lobby(bdt, bdp);
+    }
+    else if (strcmp(option, "4") == 0) {
+        LimpaTela();
+        RemoverPartida(bdt, bdp);
         sleep(1.5);
         printf("---------------------\n\n");
         lobby(bdt, bdp);

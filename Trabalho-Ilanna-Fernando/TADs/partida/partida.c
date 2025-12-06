@@ -20,6 +20,23 @@ struct bdpartida {
     int qtd;
 };
 
+Partida *createPartida(int id, int time1id,int time2id, int GolsTime1, int GolsTime2) {
+        Partida *novaPartida = (Partida *)malloc(sizeof(Partida));
+        if (novaPartida == NULL) {
+            printf("Erro ao alocar memória");
+        }
+        novaPartida->id = id;
+        novaPartida->Time1id = time1id;
+        novaPartida->Time2id = time2id;
+        novaPartida->GolsTime1 = GolsTime1;
+        novaPartida->GolsTime2 = GolsTime2;
+        novaPartida->next = NULL;
+        novaPartida->prev = NULL;
+
+        return novaPartida;
+}
+
+
 //Função que carrega arquivo partidas
 void extraiArquivoPartidas(bdPartidas *bdp) {
     FILE *file = fopen("arquivos/partidas_completo.csv", "r");
@@ -28,15 +45,17 @@ void extraiArquivoPartidas(bdPartidas *bdp) {
         printf("Erro ao abrir o arquivo\n");
         return;
     }
-    Partida *novaPartida;
     char linha[255];
     fgets(linha, sizeof(linha), file); //ler o indice (pula o índice)
     while (fgets(linha, sizeof(linha), file) != NULL) {
-        novaPartida = (Partida *)malloc(sizeof(Partida));
-        if (novaPartida == NULL) {
-            printf("Erro ao alocar memória");
-        }
-        sscanf(linha, "%d, %d, %d, %d, %d", &novaPartida->id, &novaPartida->Time1id, &novaPartida->Time2id, &novaPartida->GolsTime1, &novaPartida->GolsTime2);
+        int id;
+        int Time1id;
+        int Time2id;
+        int GolsTime1;
+        int GolsTime2;
+        
+        sscanf(linha, "%d, %d, %d, %d, %d", &id, &Time1id, &Time2id, &GolsTime1, &GolsTime2);
+        Partida *novaPartida = createPartida(id, Time1id, Time2id, GolsTime1, GolsTime2);
         inserirBDPartidas(novaPartida, bdp);
     }
     fclose(file);
@@ -82,8 +101,8 @@ void printBDPartidas(bdPartidas *bd) {
 
 }
 
-// Libera memória de BDTimes
-void liberaBDTimes(bdPartidas *bd) {
+// Libera memória de BDpartidas
+void liberaBDPartidas(bdPartidas *bd) {
     Partida *p = bd->first;
     Partida *t;
     while (p != NULL) {
@@ -107,7 +126,7 @@ int getTime1ID(bdPartidas *bdp, int i) {
         cont++;
     }
     if(p == NULL) {
-        return NULL;
+        return 1;
     }
     return p->Time1id;
 }
@@ -121,7 +140,7 @@ int getTime2ID(bdPartidas *bdp, int i) {
         cont++;
     }
     if(p == NULL) {
-        return NULL;
+        return 1;
     }
     return p->Time2id;
 }
@@ -135,7 +154,7 @@ int getGolsTime1(bdPartidas *bdp, int i) {
         cont++;
     }
     if(p == NULL) {
-        return NULL;
+        return 1;
     }
     return p->GolsTime1;
 }
@@ -149,7 +168,7 @@ int getGolsTime2(bdPartidas *bdp, int i) {
         cont++;
     }
     if(p == NULL) {
-        return NULL;
+        return 1;
     }
     return p->GolsTime2;
 }
@@ -163,7 +182,7 @@ int getPartidaID(bdPartidas *bdp, int i) {
         cont++;
     }
     if(p == NULL) {
-        return NULL;
+        return 1;
     }
     return p->id;
 }

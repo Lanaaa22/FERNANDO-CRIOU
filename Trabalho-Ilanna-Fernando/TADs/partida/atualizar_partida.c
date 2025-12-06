@@ -1,3 +1,4 @@
+/*
 #include "../partida/atualizar_partida.h"
 #include "../system/system.h"
 #include <string.h>
@@ -19,3 +20,4 @@ void printBDPartidas(bdPartidas *bdp) {
                p->GolsTime2);
     }
 }
+*/

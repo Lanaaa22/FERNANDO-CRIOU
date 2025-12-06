@@ -41,6 +41,7 @@ void extraiArquivoTimes(bdTimes *bdt) {
 void inserirBDtimes(Time *novoTime, bdTimes *bdt) {
     novoTime->next = bdt->first;
     bdt->first = novoTime;
+    bdt->qtd++;
 }
 
 // Cria e aloca memória para o estrutura BDTime
@@ -78,7 +79,7 @@ void liberaBDTimes(bdTimes *bd) {
 }
 
 // Retorna a quantidade de times
-int getQtdTimes(bdTimes *bdt, int i) {
+int getQtdTimes(bdTimes *bdt) {
     return bdt->qtd;
 }
 
@@ -91,21 +92,18 @@ int getIDTime(bdTimes *bdt, int i) {
         cont++;
     }
     if(p == NULL) {
-        return NULL;
+        return 1;
     }
     return p->id;
 }
 
 // Retorna o nome do time de acordo com o índice
-int getIDNome(bdTimes *bdt, int i) { 
+char *getNomeTime(bdTimes *bdt, int i) { 
     Time *p = bdt->first;
     int cont = 0;
     while(p != NULL && cont < i) {
         p = p->next;
         cont++;
-    }
-    if(p == NULL) {
-        return NULL;
     }
     return p->nome;
 }

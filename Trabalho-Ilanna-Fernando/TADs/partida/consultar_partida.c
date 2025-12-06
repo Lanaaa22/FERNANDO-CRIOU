@@ -108,7 +108,6 @@ int GetIDTimeIndice(bdTimes *bdt, bdPartidas *bdp, char *busca) {
         }
     }   
 }
-
 // Imprime os times digitados e retorna a escolha
 int EscolhaTimes(bdTimes *bdt, bdPartidas *bdp, char *busca) {
     int cont = 0;
