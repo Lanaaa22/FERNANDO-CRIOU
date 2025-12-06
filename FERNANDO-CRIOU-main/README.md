@@ -1,2 +1,0 @@
-# FERNANDO-CRIOU
-Trabalho EstDad
